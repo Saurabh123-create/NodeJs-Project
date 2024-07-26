@@ -1,0 +1,31 @@
+body{
+  font-family: Inter;
+  background-color: beige;
+
+}
+
+/* header ----------*/
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 20px;
+  height: 60px;
+  padding-left: 20px;
+  background: #000;
+}
+.headertext {
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+}
+.headertext:active {
+  color: rgb(224, 112, 112);
+}
+.headertext:hover{
+  color: rgb(224, 112, 112);
+}
+/* .headertext:last-child{
+  flex-grow: 4;
+} */
