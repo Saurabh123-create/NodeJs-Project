@@ -20,4 +20,18 @@ app.post("/signup", async(req, res)=>{
         res.send(JSON.stringify({status : 'failed',msg:'unknown error'}))
     }
 })
+
+app.post('/login', async (req, res)=>{
+    try{
+        let result = await users.findOne(req.body).select('-password');
+        if(result){
+            res.send(JSON.stringify({data : result, status : 'success'}))
+    }else{
+        res.send(JSON.stringify({status : 'failed', msg : "Incorrect Password or Username"}))
+    }
+    }catch(error){
+        res.send(JSON.stringify(error))
+    }
+})
+
 app.listen(3000)

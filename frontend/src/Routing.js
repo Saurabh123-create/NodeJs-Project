@@ -5,7 +5,7 @@ import About from "./components/About";
 import SignUp from "./components/SignUp";
 import Contact from "./components/Contact";
 import ProtectedRoute from "./ProtectedRoute";
-
+import Login from "./components/Login";
 export default function Routing() {
   return (
     <Routes>
@@ -17,6 +17,7 @@ export default function Routing() {
       </Route>
 
       <Route path={"/signup"} element={<SignUp />} />
+      <Route path={"/login"} element={<Login />} />
 
     </Routes>
   );

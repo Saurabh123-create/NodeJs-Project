@@ -15,7 +15,10 @@ export default function Header(){
             {auth?
             <Link className='headertext' onClick={logout} to={'/signup'}>Logout</Link>
             :
+            <>
+            <Link className='headertext' to={'/login'}>Login</Link>
             <Link className='headertext' to={'/signup'}>Sign Up</Link>
+            </>
             }
         </div>
     )
