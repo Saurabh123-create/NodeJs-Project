@@ -1,7 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import LoginCss from './login.module.css';
+
 export default function Login() {
     const navigate = useNavigate()
+
+    useEffect(()=>{
+        let auth = localStorage.getItem("signup user")
+        if(auth){
+            navigate('/');
+        }
+    },[])
     const [data , setData] = useState({
         username : '',
         password : '',
@@ -39,8 +48,10 @@ export default function Login() {
       }
 
   return (
-    <div
-      style={{height: "100%%", padding: "20px" }}
+    <div style={{display : 'flex', flexDirection : 'row', height : '91vh'}}>
+        <div className={LoginCss.img}></div>
+        <div
+      className={LoginCss.login}
     >
 
         <form onSubmit={handleSubmit}>
@@ -113,8 +124,11 @@ export default function Login() {
             </button>
           </div>
         </div>
+      <Link to="/signup" >Sign Up</Link>
       </div>
       </form>
     </div>
+    </div>
+
   );
 }

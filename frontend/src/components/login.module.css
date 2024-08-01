@@ -1,0 +1,12 @@
+.img {
+  background-image: url("../images/loginimg.jpeg");
+  background-size: contain;
+  background-attachment: fixed;
+  flex-grow: 1;
+  width: 65%;
+}
+
+.login {
+  width: 35%;
+  padding: 20px;
+}
