@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 export default function Producs() {
   const [productList, setProductList] = useState([]);
+  const [search , setSearch] = useState([])
   const {id} = useParams();
   const navigate = useNavigate();
   useEffect(() => {
@@ -135,6 +136,17 @@ export default function Producs() {
     }
   }
 
+  const handleSearch = async (event) =>{
+    let str = event.target.value.trim();
+    setSearch(str);
+    try{
+      let result = await fetch(`http://localhost:3000/searchProduct/${str}`);
+      result = await result.json();
+    }catch(err){
+      console.log(err)
+    }
+  }
+
   return (
     <div style={{ fontFamily: "Inter" }}>
       <div
@@ -202,6 +214,8 @@ export default function Producs() {
           </div>
         </form>
       </div>
+
+      <div className={ProductCss.search}>Search : <input type="text" placeholder="Search..." value={search} onChange={handleSearch}/></div>
 
       <div className={ProductCss.list}>
         <ul>
