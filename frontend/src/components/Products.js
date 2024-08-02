@@ -140,8 +140,9 @@ export default function Producs() {
     let str = event.target.value.trim();
     setSearch(str);
     try{
-      let result = await fetch(`http://localhost:3000/searchProduct/${str}`);
+      let result = await fetch(`http://localhost:3000/getProducts/${str}`);
       result = await result.json();
+      setProductList(result);
     }catch(err){
       console.log(err)
     }

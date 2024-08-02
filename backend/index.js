@@ -113,8 +113,7 @@ app.put('/updateProduct/:_id',async (req, res)=>{
   }
 })
 
-app.get('/searchProduct/:key',async (req,res)=>{
-  if(req.params.key.length > 0){
+app.get('/getProducts/:key',async (req,res)=>{
     let result  = await products.find({
       "$or" : [
         {name : {$regex : req.params.key}},
@@ -122,10 +121,6 @@ app.get('/searchProduct/:key',async (req,res)=>{
       ]
     })
     res.send(JSON.stringify(result))
-  }
-  else{
-    res.send("")
-  }
 })
 
 app.listen(3000);
