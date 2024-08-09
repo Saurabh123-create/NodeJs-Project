@@ -37,7 +37,9 @@ export default function SignUp() {
     result = await result.json();
     if(result.status == 'success'){
         setResponse(result.msg);
-        localStorage.setItem("signup user",JSON.stringify(data));
+        console.log(result,'result')
+        localStorage.setItem("signup user",JSON.stringify(result.data));
+        localStorage.setItem("token",JSON.stringify(result.auth));
         navigate('/')
     }
     else if(result.status == 'failed'){

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import SignCss from "./signup.module.css";
 import ProductCss from "./Products.module.css";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from "react-router-dom";
 
+const token = JSON.parse(localStorage.getItem("token"))
 export default function Producs() {
   const [productList, setProductList] = useState([]);
-  const [search , setSearch] = useState([])
-  const {id} = useParams();
+  const [search, setSearch] = useState([]);
+  const { id } = useParams();
   const navigate = useNavigate();
+  console.log(token)
   useEffect(() => {
-    if(id != undefined){
+    if (id != undefined) {
       getUpdateProductList(id);
-    }else{
+    } else {
       getProductList();
     }
   }, [id]);
@@ -31,25 +33,26 @@ export default function Producs() {
   async function addProduct(e) {
     e.preventDefault();
 
-    if(id == undefined){
+    if (id == undefined) {
       try {
         let addData = await fetch("http://localhost:3000/addProducts", {
           method: "post",
           body: JSON.stringify(data),
           headers: {
             "Content-Type": "application/json",
+            "Authorization" : token
           },
         });
         addData = await addData.json();
         if (addData.status) {
           alert(addData.msg);
-          setData(prev=>{
+          setData((prev) => {
             return {
-              name : '',
-              company : '',
-              price : "",
-            }
-          })
+              name: "",
+              company: "",
+              price: "",
+            };
+          });
           getProductList();
         } else {
           alert(addData.msg);
@@ -57,39 +60,44 @@ export default function Producs() {
       } catch (err) {
         console.log(err);
       }
-    } 
-    else{
+    } else {
       try {
         let addData = await fetch(`http://localhost:3000/updateProduct/${id}`, {
           method: "put",
           body: JSON.stringify(data),
           headers: {
             "Content-Type": "application/json",
+            "Authorization" : token
           },
         });
         addData = await addData.json();
         if (addData) {
-          alert('Data Updated Successfully');
-          setData(prev=>{
+          alert("Data Updated Successfully");
+          setData((prev) => {
             return {
-              name : '',
-              company : '',
-              price : "",
-            }
-          })
+              name: "",
+              company: "",
+              price: "",
+            };
+          });
           getProductList();
-        }
-       else {
+        } else {
           alert(addData);
         }
-    } catch (err) {
-      console.log(err);
+      } catch (err) {
+        console.log(err);
+      }
     }
-  } }
+  }
 
   async function getProductList() {
     try {
-      let resp = await fetch("http://localhost:3000/getProducts");
+      let resp = await fetch("http://localhost:3000/getProducts", {
+        headers : {
+          "Content-Type" : "application/json",
+          "Authorization" : token
+        }
+      });
       resp = await resp.json();
       setProductList(resp);
     } catch (err) {
@@ -97,56 +105,72 @@ export default function Producs() {
     }
   }
 
-  async function getUpdateProductList(id){
+  async function getUpdateProductList(id) {
     try {
-      let resp = await fetch("http://localhost:3000/getUpdateProducts"+id);
+      let resp = await fetch("http://localhost:3000/getUpdateProducts" + id , {
+        headers : {
+          "Authorization" : token
+        }
+      });
       resp = await resp.json();
-      if(resp.status){
+      if (resp.status) {
         let inp = resp.data;
-        setData(prev=>{
-          return {...prev , name : inp.name, company : inp.company, price : inp.price}
-        })
-      }else{
-        console.log(resp.msg)
+        setData((prev) => {
+          return {
+            ...prev,
+            name: inp.name,
+            company: inp.company,
+            price: inp.price,
+          };
+        });
+      } else {
+        console.log(resp.msg);
       }
-      
     } catch (err) {
-      console.log(err)
+      console.log(err);
       // setProductList([]);
     }
   }
 
-  const DeleteItem = async (item)=>{
-    try{
-      let result = await fetch('http://localhost:3000/deleteProducts/'+item._id , {
-        method : "delete",
+  const DeleteItem = async (item) => {
+    try {
+      let result = await fetch(
+        "http://localhost:3000/deleteProducts/" + item._id,
+        {
+          method: "delete",
+          headers: {
+            Content_Type: "application/json",
+            "Authorization" : token
+          },
+        }
+      );
+      result = await result.json();
+      if (result.status) {
+        alert("Data deleted successfully");
+        getProductList();
+      } else if (!result.status) {
+        alert(result.msg);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSearch = async (event) => {
+    let str = event.target.value.trim();
+    setSearch(str);
+    try {
+      let result = await fetch(`http://localhost:3000/getProducts/${str}`,{
         headers : {
-          "Content_Type" : "application/json"
+          "Authorization" : token
         }
       });
       result = await result.json();
-      if(result.status){
-        alert("Data deleted successfully")
-        getProductList();
-      }else if(!result.status){
-        alert(result.msg)
-      }
-    }catch(err){
+      setProductList(result);
+    } catch (err) {
       console.log(err);
     }
-  }
-
-  const handleSearch = async (event) =>{
-    let str = event.target.value.trim();
-    setSearch(str);
-    try{
-      let result = await fetch(`http://localhost:3000/getProducts/${str}`);
-      result = await result.json();
-      setProductList(result);
-    }catch(err){
-      console.log(err)
-    }
-  }
+  };
 
   return (
     <div style={{ fontFamily: "Inter" }}>
@@ -158,7 +182,9 @@ export default function Producs() {
           margin: "10px",
         }}
       >
-        <h2 style={{ margin: "10px 0px" }}>{id ? "Update Products" : 'Add Products'}</h2>
+        <h2 style={{ margin: "10px 0px" }}>
+          {id ? "Update Products" : "Add Products"}
+        </h2>
         <form onSubmit={addProduct}>
           <div
             style={{
@@ -216,7 +242,15 @@ export default function Producs() {
         </form>
       </div>
 
-      <div className={ProductCss.search}>Search : <input type="text" placeholder="Search..." value={search} onChange={handleSearch}/></div>
+      <div className={ProductCss.search}>
+        Search :{" "}
+        <input
+          type="text"
+          placeholder="Search..."
+          value={search}
+          onChange={handleSearch}
+        />
+      </div>
 
       <div className={ProductCss.list}>
         <ul>
@@ -236,8 +270,20 @@ export default function Producs() {
               <li>{item.company}</li>
               <li>{item.price}</li>
               <li>
-                <button onClick={()=>{DeleteItem(item)}}>Delete</button>
-                <button onClick={()=>{navigate('/products/'+item._id)}}>Update</button>
+                <button
+                  onClick={() => {
+                    DeleteItem(item);
+                  }}
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/products/" + item._id);
+                  }}
+                >
+                  Update
+                </button>
               </li>
             </ul>
           );

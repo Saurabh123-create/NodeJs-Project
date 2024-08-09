@@ -35,6 +35,7 @@ export default function Login() {
         if(result.status == "success"){
             alert("Login Successful");
             localStorage.setItem('signup user', JSON.stringify(result.data))
+            localStorage.setItem('token', JSON.stringify(result.auth))
             navigate('/');
         }else if(result.status == "failed"){
             alert(result.msg)
